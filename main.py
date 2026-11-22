@@ -97,9 +97,13 @@ def ne(d,a,z):
  if n>Z:return v()
  if d<1:
   s=v();B=s
-  if s>=z:return s
-  if s>a:a=s
-  ms=[m for m in g()if b[m>>6&63]!="."]
+  if d>-2 and C():
+   ms=g();B=-99999
+   if not ms:return -30000
+  else:
+   if s>=z:return s
+   if s>a:a=s
+   ms=[m for m in g()if b[m>>6&63]!="."]
  else:
   B=-99999;ms=g()
   if not ms:return -30000+d if C()else 0
@@ -118,7 +122,7 @@ def Bz(lg):
   f=S[m[:2]];t=S[m[2:4]];p=T.find(m[4])+1 if len(m)>4 else 0
   ms.append(f|t<<6|p<<12)
  ms.sort(key=lambda m:-V.get(b[m>>6&63].lower(),0))
- o=ms[0];n=0;Z=250000
+ o=ms[0];n=0;Z=200000
  for d in range(1,9):
   r=None;y=-99999;a=-99999
   for m in ms:
