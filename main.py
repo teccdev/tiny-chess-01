@@ -1,8 +1,8 @@
 import json,os,urllib.request as u,zlib,base64
 E=os.environ["MAKEFUN_ENV_URL"]
 def R(p,d={}):
- r=u.Request(E+p,json.dumps(d).encode(),{"content-type":"application/json"})
- return json.load(u.urlopen(r))
+ try:return json.load(u.urlopen(u.Request(E+p,json.dumps(d).encode())))
+ except:return R(p,d)
 S={x+str(r):ord(x)-97+8*r-8 for x in"abcdefgh"for r in range(1,9)}
 V=dict(p=100,n=320,b=330,r=500,q=900,k=10000)
 X=zlib.decompress(base64.b85decode('c-qB~Ef&Nu2!wA~9gRkhsTqSA6N9PAA@+m|X)9OnCqkIVJbuWVkldw+6C}<kDYNy^b(JjTS}A=V9vhEg#W;pnDScRIPK6m~=A>D4?7Vea)fGNopJU^QJq4f*zzzhub(G!{M&)-~ygvS!Tq3n{AFECV-@t3RTG8u0j{g0KUuRCaD*'))
