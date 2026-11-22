@@ -127,7 +127,7 @@ def Bz(lg):
   f=S[m[:2]];t=S[m[2:4]];p=T.find(m[4])+1 if len(m)>4 else 0
   ms.append(f|t<<6|p<<12)
  ms.sort(key=ky)
- o=ms[0];n=0;Z=200000
+ o=ms[0];n=0;Z=250000
  for d in range(1,9):
   r=None;y=-99999;a=-99999
   for m in ms:
