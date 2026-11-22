@@ -1,18 +1,20 @@
-import json,os,urllib.request as u
+import json,os,urllib.request as u,zlib,base64
 E=os.environ["MAKEFUN_ENV_URL"]
 def R(p,d={}):
  r=u.Request(E+p,json.dumps(d).encode(),{"content-type":"application/json"})
  return json.load(u.urlopen(r))
 S={x+str(r):ord(x)-97+8*r-8 for x in"abcdefgh"for r in range(1,9)}
 V=dict(p=100,n=320,b=330,r=500,q=900,k=10000)
-P=dict(p='::::::::;<<66<<;;98::89;:::>>:::;;<??<;;<<>@@><<DDDDDDDD::::::::',n='0244442026:;;:624;<==<;44:=>>=:44;=>>=;44:<==<:426::::6202444420',b='688888868;::::;88<<<<<<88:<<<<:88;;<<;;88:;<<;:88::::::868888886',r='::::::::;<<<<<<;9::::::99::::::99::::::99::::::99::::::9:::;;:::',q='688998868::::::88:;;;;:89:;;;;:9::;;;;:98;;;;;:88:;::::868899886',k='>@<::<@>>>::::>>866666686442244642200224422002244220022442200224')
-for k in P:P[k]=[ord(x)*5-290 for x in P[k]]
+X=zlib.decompress(base64.b85decode('c-qB~Ef&Nu2!wA~9gRkhsTqSA6N9PAA@+m|X)9OnCqkIVJbuWVkldw+6C}<kDYNy^b(JjTS}A=V9vhEg#W;pnDScRIPK6m~=A>D4?7Vea)fGNopJU^QJq4f*zzzhub(G!{M&)-~ygvS!Tq3n{AFECV-@t3RTG8u0j{g0KUuRCaD*'))
+P={k:[z-128 for z in X[i*64:i*64+64]] for i,k in enumerate("pnbrqk")}
+ky=lambda m:-V.get(b[m>>6&63].lower(),0)
+Y={v:k for k,v in S.items()}
 N=[(1,2),(2,1),(2,-1),(1,-2),(-1,-2),(-2,-1),(-2,1),(-1,2)]
 K=[(1,0),(1,1),(0,1),(-1,1),(-1,0),(-1,-1),(0,-1),(1,-1)]
 G=[(1,1),(1,-1),(-1,1),(-1,-1)]
 D=[(1,0),(-1,0),(0,1),(0,-1)]
 T="nbrq";Q=range(64)
-b=[];w=1;e=-1;h=[];n=0;Z=400000
+b=[];w=1;e=-1;h=[];n=0;Z=400000;RP={};M=1
 def ld(F):
  global b,w,e
  g=F.split();b=["."]*64;i=56
@@ -84,16 +86,19 @@ def um():
   else:b[f-4]=b[f-1];b[f-1]="."
  e=E;w=1-w
 def v():
- s=0
+ s=0;t=[0,0]
  for i in Q:
   p=b[i]
   if p!=".":
    l=p.lower();y=V[l]+P[l][i if p<"a"else i^56]
    s+=y if p<"a"else-y
+   t[p<"a"]+=V[l]*(l<"k")
+ if s*s>16e4 and"K"in b and"k"in b and t[s<0]<500:k,K=b.index("k"),b.index("K");s+=(14-abs(k%8-K%8)-abs(k//8-K//8))*16*(s>0 or-1)
  return s if w else-s
 def ne(d,a,z):
  global n
  n+=1
+ if w==M and''.join(b)in RP:return 0
  if n>Z:return v()
  if d<1:
   s=v();B=s
@@ -107,7 +112,7 @@ def ne(d,a,z):
  else:
   B=-99999;ms=g()
   if not ms:return -30000+d if C()else 0
- ms.sort(key=lambda m:-V.get(b[m>>6&63].lower(),0))
+ ms.sort(key=ky)
  for m in ms:
   mk(m);y=-ne(d-1,-z,-a);um()
   if y>B:
@@ -121,7 +126,7 @@ def Bz(lg):
  for m in lg:
   f=S[m[:2]];t=S[m[2:4]];p=T.find(m[4])+1 if len(m)>4 else 0
   ms.append(f|t<<6|p<<12)
- ms.sort(key=lambda m:-V.get(b[m>>6&63].lower(),0))
+ ms.sort(key=ky)
  o=ms[0];n=0;Z=200000
  for d in range(1,9):
   r=None;y=-99999;a=-99999
@@ -131,11 +136,10 @@ def Bz(lg):
    if x>a:a=x
   if n>Z:break
   o=r;ms=[r]+[m for m in ms if m!=r]
- f=o&63;t=o>>6&63;p=o>>12
- q="abcdefgh"[f&7]+str((f>>3)+1)+"abcdefgh"[t&7]+str((t>>3)+1)
- return q+T[p-1]if p else q
+ p=o>>12
+ return Y[o&63]+Y[o>>6&63]+(T[p-1]if p else"")
 x=R("/game")
 while x["status"]!="done":
  if x["status"]=="your_move":
-  ld(x["fen"]);x=R("/move",{"game":x["game"],"move":Bz(x["legal_moves"])})
+  ld(x["fen"]);q=''.join(b);RP[q]=-~RP.get(q,0);M=w;x=R("/move",{"game":x["game"],"move":Bz(x["legal_moves"])})
  else:x=R("/game")
